@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import seckill.dto.Exposer;
+import seckill.dto.SeckillExecution;
 import seckill.entity.Seckill;
+import seckill.exception.RepeatKillException;
+import seckill.exception.SeckillException;
 
 import java.util.List;
 
@@ -29,24 +32,34 @@ public class SeckillServiceTest {
     @Test
     public void getSeckillList() {
         List<Seckill> list = seckillService.getSeckillList();
-        logger.info("list={}",list);
+        logger.info("list={}", list);
     }
 
     @Test
     public void getById() {
         long id = 1000;
         Seckill seckill = seckillService.getById(id);
-        logger.info("seckill={}",seckill);
+        logger.info("seckill={}", seckill);
     }
 
     @Test
     public void exportSeckillUrl() {
-        long id = 1000;
+        long id = 1001;
+        long phone = 87623632l;
         Exposer exposer = seckillService.exportSeckillUrl(id);
-        logger.info("exposer={}",exposer);
-    }
-
-    @Test
-    public void executeSeckill() {
+        String md5 = exposer.getMd5();
+        if (exposer.isExposed()) {
+            try {
+                SeckillExecution seckillExecution = seckillService.executeSeckill(id, phone, md5);
+            } catch (RepeatKillException e) {
+                logger.info(e.getMessage());
+            } catch (SeckillException e) {
+                logger.info(e.getMessage());
+            }
+            logger.info("exposer={}", exposer);
+        } else {
+            logger.error("exposer={}", exposer);
+        }
     }
 }
+

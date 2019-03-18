@@ -17,7 +17,7 @@ public class SuccessKillDaoTest {
 
     @Test
     public void insertSuccessKilled() {
-        int insertSuccessKilled = successKillDao.insertSuccessKilled(1000, 87623632);
+        int insertSuccessKilled = successKillDao.insertSuccessKilled(1000, 18758930933L);
         System.out.println(insertSuccessKilled);
     }
 
